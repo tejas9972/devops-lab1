@@ -8,7 +8,7 @@ phases:
     commands:
       - flake8 app.py test_app.py
       - pytest test_app.py
-      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $ECR_URI
+      - aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin $ECR_URI
   build:
     commands:
       - docker build -t devops-lab1-app .
