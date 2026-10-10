@@ -1,0 +1,20 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - pip install flake8 pytest
+  pre_build:
+    commands:
+      - flake8 app.py test_app.py
+      - pytest test_app.py
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $ECR_URI
+  build:
+    commands:
+      - docker build -t devops-lab1-app .
+      - docker tag devops-lab1-app:latest $ECR_URI:latest
+      - docker tag devops-lab1-app:latest $ECR_URI:$CODEBUILD_RESOLVED_SOURCE_VERSION
+  post_build:
+    commands:
+      - docker push $ECR_URI:latest
+      - docker push $ECR_URI:$CODEBUILD_RESOLVED_SOURCE_VERSION
